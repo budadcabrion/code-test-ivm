@@ -1,0 +1,14 @@
+1. Write a simple rust api that needs persistent storage & produces prometheus metrics.
+
+2. Containerize and deploy your Rust API to a Kubernetes cluster.
+
+-You can use KIND or Minikube. It's possible there is a free or cheap cloud option out there too.
+-Bonus points for using Pulumi but it may be easier/valuable to begin with vanilla yaml definitions. 
+
+3. Monitor the logs and metrics of your api.
+
+-You can deploy services as DaemonSets for log collection and other things
+-Grafana Alloy may be used to scrape metrics
+-Free Grafana Cloud should work for the visualizer/metrics data stores
+-Bonus points for running your own prometheus and loki instances instead of using grafana cloud, but it's kind of a lot
+-Bonus points for having any kind of alerting off of metrics. PagerDuty or Grafana IRM may have free options. This is the most optional part

@@ -3,11 +3,22 @@ use std::sync::Mutex;
 
 struct AppState {
     app_name: String,
-    counter: Mutex<i32>
+    counter: Mutex<i32>,
+
+
+}
+
+impl AppState {
+    fn inc_counter(&self) -> i32{
+        let mut c = self.counter.lock().unwrap();
+        *c += 1;
+
+        return *c;
+    }
 }
 
 async fn index(app_state: web::Data<AppState>) -> impl Responder {
-    *app_state.counter.lock().unwrap() += 1;
+    app_state.inc_counter();
 
     let app_name = &app_state.app_name;
     HttpResponse::Ok().body(format!("Welcome to my web app {app_name}"))
@@ -15,8 +26,8 @@ async fn index(app_state: web::Data<AppState>) -> impl Responder {
 
 #[get("/hello/{name}")]
 async fn hello(path: web::Path<String>, app_state: web::Data<AppState>) -> impl Responder {
-    *app_state.counter.lock().unwrap() += 1;
-
+    app_state.inc_counter();
+    
     let name = path.into_inner();
     HttpResponse::Ok().body(
         format!("Welcome {}", name)
@@ -25,8 +36,7 @@ async fn hello(path: web::Path<String>, app_state: web::Data<AppState>) -> impl 
 
 #[get("/counter")]
 async fn counter(app_state: web::Data<AppState>) -> impl Responder {
-    let mut c = app_state.counter.lock().unwrap();
-    *c += 1;
+    let c = app_state.inc_counter();
 
     HttpResponse::Ok().body(
         format!("Request count: {c}")
